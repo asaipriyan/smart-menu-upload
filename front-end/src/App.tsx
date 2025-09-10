@@ -23,6 +23,7 @@ function formatSize(bytes: number) {
 
 export default function App() {
   const [imgs, setImgs] = useState<Img[]>([]);
+  const [results, setResults] = useState<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const addFiles = (files: FileList | null) => {
@@ -58,13 +59,26 @@ export default function App() {
     setImgs((prev) => prev.filter((i) => i.id !== id));
 
   const uploadAll = async () => {
-    // demo: replace with your backend or pre-signed S3 URL
-    for (const img of imgs.filter((i) => !i.error)) {
-      const fd = new FormData();
-      fd.append("file", img.file);
-      await fetch("/upload", { method: "POST", body: fd });
+    const fd = new FormData();
+    imgs
+      .filter((i) => !i.error)
+      .forEach((img) => {
+        fd.append("menu", img.file);
+      });
+    const response = await fetch(
+      "http://localhost:4000/api/8051046/menu/upload",
+      {
+        method: "POST",
+        body: fd,
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setResults(data);
+    } else {
+      alert("Upload failed!");
     }
-    alert("Uploaded (mock). Point /upload to your backend.");
   };
 
   return (
@@ -123,6 +137,21 @@ export default function App() {
             </button>
           </div>
         </>
+      )}
+
+      {results && (
+        <div className="results">
+          <h2>Upload Results</h2>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(results, null, 2));
+            }}
+            style={{ marginBottom: "8px" }}
+          >
+            Copy
+          </button>
+          <pre>{JSON.stringify(results, null, 2)}</pre>
+        </div>
       )}
     </div>
   );
