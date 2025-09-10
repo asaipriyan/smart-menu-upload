@@ -4,7 +4,13 @@ import {
 } from "@aws-sdk/client-textract";
 import { readFileSync } from "fs";
 
-const client = new TextractClient({ region: "us-east-1" });
+const client = new TextractClient({
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },
+});
 
 export async function extractText(filePath: string): Promise<string> {
   const fileBytes = readFileSync(filePath);

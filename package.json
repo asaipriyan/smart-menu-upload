@@ -1,34 +1,19 @@
 {
-  "name": "smart-menu-upload",
-  "version": "1.0.0",
-  "description": "A TypeScript project for smart menu upload functionality",
-  "main": "dist/index.js",
+  "name": "smart-menu-monorepo",
+  "private": true,
+  "workspaces": [
+    "front-end",
+    "back-end"
+  ],
   "scripts": {
-    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-    "build": "tsc -p .",
-    "start": "node dist/index.js"
-  },
-  "dependencies": {
-    "@aws-sdk/client-textract": "^3.882.0",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "multer": "^2.0.2",
-    "openai": "^5.19.1"
+    "dev": "concurrently -n FE,BE -c auto \"npm run dev -w front-end\" \"npm run dev -w back-end\"",
+    "dev:front": "npm run dev -w front-end",
+    "dev:back": "npm run dev -w back-end",
+    "build": "npm run -ws build",
+    "build:front": "npm run build -w front-end",
+    "build:back": "npm run build -w back-end"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/multer": "^2.0.0",
-    "@types/node": "^24.3.1",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/asaipriyan/smart-menu-upload.git"
-  },
-  "author": "Asaipriyan",
-  "license": "MIT"
+    "concurrently": "^9.0.0"
+  }
 }

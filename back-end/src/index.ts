@@ -7,7 +7,7 @@ import fs from "fs";
 require("dotenv").config();
 
 const app = express();
-const port = 30001;
+const port = 4000;
 
 // File upload config
 const upload = multer({ dest: path.join(__dirname, "uploads/") });
